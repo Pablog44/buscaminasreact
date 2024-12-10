@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/buscaminasreact/static/css/main.5e47a400.css",
+    "main.js": "/buscaminasreact/static/js/main.2aa68873.js",
+    "index.html": "/buscaminasreact/index.html",
+    "main.5e47a400.css.map": "/buscaminasreact/static/css/main.5e47a400.css.map",
+    "main.2aa68873.js.map": "/buscaminasreact/static/js/main.2aa68873.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5e47a400.css",
+    "static/js/main.2aa68873.js"
+  ]
+}
