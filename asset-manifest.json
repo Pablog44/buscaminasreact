@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/buscaminasreact/static/css/main.239d1764.css",
-    "main.js": "/buscaminasreact/static/js/main.08ab409b.js",
+    "main.css": "/buscaminasreact/static/css/main.b5363f26.css",
+    "main.js": "/buscaminasreact/static/js/main.13255a4b.js",
     "index.html": "/buscaminasreact/index.html",
-    "main.239d1764.css.map": "/buscaminasreact/static/css/main.239d1764.css.map",
-    "main.08ab409b.js.map": "/buscaminasreact/static/js/main.08ab409b.js.map"
+    "main.b5363f26.css.map": "/buscaminasreact/static/css/main.b5363f26.css.map",
+    "main.13255a4b.js.map": "/buscaminasreact/static/js/main.13255a4b.js.map"
   },
   "entrypoints": [
-    "static/css/main.239d1764.css",
-    "static/js/main.08ab409b.js"
+    "static/css/main.b5363f26.css",
+    "static/js/main.13255a4b.js"
   ]
 }
