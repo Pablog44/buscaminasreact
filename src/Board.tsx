@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 // Tipos
 type Cell = {
@@ -15,21 +15,28 @@ type BoardProps = {
 };
 
 const directions = [
-  [-1, -1], [-1, 0], [-1, 1],
-  [0, -1],           [0, 1],
-  [1, -1],  [1, 0],  [1, 1],
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
 ];
 
 const generateEmptyBoard = (rows: number, cols: number): Cell[][] => {
   return Array(rows)
     .fill(null)
     .map(() =>
-      Array(cols).fill(null).map(() => ({
-        isMine: false,
-        revealed: false,
-        flagged: false,
-        neighborCount: 0,
-      }))
+      Array(cols)
+        .fill(null)
+        .map(() => ({
+          isMine: false,
+          revealed: false,
+          flagged: false,
+          neighborCount: 0,
+        }))
     );
 };
 
@@ -43,9 +50,9 @@ const generateBoardWithMines = (
 ): Cell[][] => {
   const board = generateEmptyBoard(rows, cols);
 
-  // Queremos evitar poner minas en safeRow, safeCol y en sus vecinos
+  // Evitar poner minas en safeRow, safeCol y en sus vecinos
   const safePositions = new Set<string>();
-  directions.concat([[0,0]]).forEach(([dr, dc]) => {
+  directions.concat([[0, 0]]).forEach(([dr, dc]) => {
     const nr = safeRow + dr;
     const nc = safeCol + dc;
     if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
@@ -72,7 +79,13 @@ const generateBoardWithMines = (
         directions.forEach(([dr, dc]) => {
           const nr = r + dr;
           const nc = c + dc;
-          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].isMine) {
+          if (
+            nr >= 0 &&
+            nr < rows &&
+            nc >= 0 &&
+            nc < cols &&
+            board[nr][nc].isMine
+          ) {
             count++;
           }
         });
@@ -99,8 +112,10 @@ const revealCells = (board: Cell[][], row: number, col: number): Cell[][] => {
         const nr = r + dr;
         const nc = c + dc;
         if (
-          nr >= 0 && nr < newBoard.length &&
-          nc >= 0 && nc < newBoard[0].length &&
+          nr >= 0 &&
+          nr < newBoard.length &&
+          nc >= 0 &&
+          nc < newBoard[0].length &&
           !newBoard[nr][nc].revealed &&
           !newBoard[nr][nc].flagged
         ) {
@@ -113,13 +128,13 @@ const revealCells = (board: Cell[][], row: number, col: number): Cell[][] => {
   return newBoard;
 };
 
-// Esta función realiza el "chord": si la celda clickeada es un número
-// y la cantidad de banderas a su alrededor coincide con su número, se revela
-// las demás celdas vecinas.
+// "Chord": si la celda clickeada es un número ya revelado, y el número de banderas alrededor
+// coincide con ese número, se revelan las celdas ocultas vecinas.
 const chord = (board: Cell[][], row: number, col: number): Cell[][] => {
   const newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
   const cell = newBoard[row][col];
-  if (!cell.revealed || cell.flagged || cell.isMine || cell.neighborCount === 0) return newBoard;
+  if (!cell.revealed || cell.flagged || cell.isMine || cell.neighborCount === 0)
+    return newBoard;
 
   let flaggedCount = 0;
   let hiddenNeighbors: [number, number][] = [];
@@ -229,38 +244,62 @@ const Board: React.FC<BoardProps> = ({ rows, cols, mines }) => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {gameOver && <div className="mb-2 text-red-600 font-bold">¡Boom! Perdiste.</div>}
-      {win && <div className="mb-2 text-green-600 font-bold">¡Ganaste!</div>}
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {gameOver && (
+        <div style={{ marginBottom: "8px", color: "red", fontWeight: "bold" }}>
+          ¡Boom! Perdiste.
+        </div>
+      )}
+      {win && (
+        <div style={{ marginBottom: "8px", color: "green", fontWeight: "bold" }}>
+          ¡Ganaste!
+        </div>
+      )}
+
       <div
-        className="grid"
         style={{
-          gridTemplateColumns: `repeat(${cols}, 2rem)`,
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, 32px)`,
           gap: "2px",
+          backgroundColor: "#000",
+          padding: "2px",
         }}
       >
         {board.map((row, rowIndex) =>
           row.map((cell, colIndex) => {
             let cellContent = "";
-            let cellClasses = "w-8 h-8 flex items-center justify-center border rounded ";
+            let cellStyle: React.CSSProperties = {
+              width: "32px",
+              height: "32px",
+              border: "1px solid #555",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "16px",
+              fontWeight: "bold",
+              userSelect: "none",
+              boxSizing: "border-box",
+            };
 
             if (cell.revealed) {
               if (cell.isMine) {
                 cellContent = "💣";
-                cellClasses += "bg-red-500 text-white ";
+                cellStyle.backgroundColor = "red";
+                cellStyle.color = "white";
               } else {
-                cellClasses += "bg-gray-300 ";
+                cellStyle.backgroundColor = "#ccc";
                 if (cell.neighborCount > 0) {
                   cellContent = cell.neighborCount.toString();
-                  cellClasses += "font-bold text-blue-800 ";
+                  cellStyle.color = "blue";
                 }
               }
             } else {
               if (cell.flagged) {
                 cellContent = "🚩";
-                cellClasses += "bg-yellow-300 ";
+                cellStyle.backgroundColor = "yellow";
               } else {
-                cellClasses += "bg-gray-700 hover:bg-gray-600 cursor-pointer ";
+                cellStyle.backgroundColor = "#777";
+                cellStyle.cursor = "pointer";
               }
             }
 
@@ -269,7 +308,7 @@ const Board: React.FC<BoardProps> = ({ rows, cols, mines }) => {
                 key={`${rowIndex}-${colIndex}`}
                 onClick={() => handleLeftClick(rowIndex, colIndex)}
                 onContextMenu={(e) => handleRightClick(e, rowIndex, colIndex)}
-                className={cellClasses}
+                style={cellStyle}
               >
                 {cellContent}
               </button>

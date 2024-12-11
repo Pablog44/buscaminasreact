@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Board from "./Board.tsx";
-import { Listbox } from "@headlessui/react";
+
 
 const difficulties = [
   { name: "Fácil (8x8, 10 minas)", rows: 8, cols: 8, mines: 10 },
@@ -17,48 +17,42 @@ function App() {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-4">
-      <h1 className="text-3xl font-bold">Buscaminas Mejorado</h1>
+    <div style={{ padding: "16px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Buscaminas Mejorado</h1>
 
-      <div className="flex space-x-2 items-center">
-        <span className="font-medium">Dificultad:</span>
-        <Listbox value={difficulty} onChange={setDifficulty}>
-          <Listbox.Button className="px-4 py-2 bg-blue-500 text-white rounded">
-            {difficulty.name}
-          </Listbox.Button>
-          <Listbox.Options className="absolute mt-1 bg-white border border-gray-300 rounded shadow-lg">
-            {difficulties.map((diff) => (
-              <Listbox.Option key={diff.name} value={diff}>
-                {({ selected, active }) => (
-                  <div
-                    className={`px-4 py-2 cursor-pointer ${
-                      active ? "bg-blue-100" : ""
-                    } ${selected ? "font-bold" : ""}`}
-                  >
-                    {diff.name}
-                  </div>
-                )}
-              </Listbox.Option>
-            ))}
-          </Listbox.Options>
-        </Listbox>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+        <span style={{ fontWeight: "bold" }}>Dificultad:</span>
+        <select
+          value={difficulty.name}
+          onChange={(e) => {
+            const diff = difficulties.find((d) => d.name === e.target.value);
+            if (diff) setDifficulty(diff);
+          }}
+          style={{ padding: "4px", borderRadius: "4px" }}
+        >
+          {difficulties.map((diff) => (
+            <option key={diff.name} value={diff.name}>
+              {diff.name}
+            </option>
+          ))}
+        </select>
 
         <button
-          onClick={() => {
-            resetGame();
-          }}
-          className="px-4 py-2 bg-green-500 text-white rounded"
+          onClick={resetGame}
+          style={{ padding: "8px 16px", backgroundColor: "green", color: "white", borderRadius: "4px" }}
         >
           Reiniciar Juego
         </button>
       </div>
 
-      <Board
-        key={gameKey}
-        rows={difficulty.rows}
-        cols={difficulty.cols}
-        mines={difficulty.mines}
-      />
+      <div style={{ marginTop: "16px" }}>
+        <Board
+          key={gameKey}
+          rows={difficulty.rows}
+          cols={difficulty.cols}
+          mines={difficulty.mines}
+        />
+      </div>
     </div>
   );
 }
