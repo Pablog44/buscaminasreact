@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Board from "./Board.tsx";
 
-
 const difficulties = [
   { name: "Fácil (8x8, 10 minas)", rows: 8, cols: 8, mines: 10 },
   { name: "Medio (16x16, 40 minas)", rows: 16, cols: 16, mines: 40 },
@@ -16,17 +15,38 @@ function App() {
     setGameKey((prevKey) => prevKey + 1);
   };
 
+  const changeDifficulty = (newDifficulty) => {
+    setDifficulty(newDifficulty);
+    resetGame();
+  };
+
   return (
-    <div style={{ padding: "16px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div
+      style={{
+        padding: "16px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Buscaminas Mejorado</h1>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "16px",
+        }}
+      >
         <span style={{ fontWeight: "bold" }}>Dificultad:</span>
         <select
           value={difficulty.name}
           onChange={(e) => {
-            const diff = difficulties.find((d) => d.name === e.target.value);
-            if (diff) setDifficulty(diff);
+            const newDiff = difficulties.find((d) => d.name === e.target.value);
+            if (newDiff) {
+              changeDifficulty(newDiff);
+            }
           }}
           style={{ padding: "4px", borderRadius: "4px" }}
         >
@@ -39,7 +59,12 @@ function App() {
 
         <button
           onClick={resetGame}
-          style={{ padding: "8px 16px", backgroundColor: "green", color: "white", borderRadius: "4px" }}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "green",
+            color: "white",
+            borderRadius: "4px",
+          }}
         >
           Reiniciar Juego
         </button>
